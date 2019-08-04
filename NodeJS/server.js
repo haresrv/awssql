@@ -3,9 +3,9 @@ const bodyParser=require('body-parser');
 const cors=require('cors');
 
 const app=express();
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
-//app.use(bodyParser.json());
+app.use(bodyParser.json());
 app.use(cors());
 
 var mysql = require('mysql');
@@ -22,7 +22,7 @@ var con = mysql.createConnection({
 con.connect(function(err) {
   if (err) throw err;
   // if connection is successful
-  con.query("Select * from student", function (err, result, fields) {
+  con.query("Select * from evaluation", function (err, result, fields) {
     // if any error while executing above query, throw error
     if (err) 
       {
@@ -44,27 +44,29 @@ con.connect(function(err) {
 
 
 
-app.get('/',(req,res)=>{
+app.get('*',(req,res)=>{
   res.json('OK');
 })
 
 
 app.post('/',(req,res)=>{
-  var {name,rollno}=req.body;
+  var {seldate,days,country,states}=req.body;
  // console.log(name);
- // console.log(rollno);
-  
-  res.json(name);
-
-  var records = [[req.body.name,req.body.rollno]];
-
+ //console.log(req.body);
+  var xtra="";
+  var records = [[req.body.seldate,req.body.days,req.body.country,req.body.states]];
+//console.log(records)
 if(records[0][0]!=null)
 {
-  con.query("INSERT INTO student (name,rollno) VALUES ?", [records], function (err, result, fields) {
-    // if any error while executing above query, throw error
-    if (err) throw err;
-    // if there is no error, you have the result
-    console.log(result);
+  con.query("INSERT INTO evaluation (seldate,days,country,states) VALUES ?", [records], function (err, result, fields) {
+    if (err) console.log(err.sqlMessage);
+   
+   const abc={
+    res:result,
+    error:err
+   }
+   res.json(JSON.stringify(abc));
+
   });
 
 }

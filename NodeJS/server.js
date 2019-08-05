@@ -10,13 +10,30 @@ app.use(cors());
 
 var mysql = require('mysql');
  
-// create a connection variable with the required details
-var con = mysql.createConnection({
-  host: "instance1.c02gbtm2eqhm.us-east-1.rds.amazonaws.com", // ip address of server running mysql
-  user: "master", // user name to your mysql database
-  password: "password", // corresponding password
-  database: "cloud337" // use the specified database
-});
+
+let config = {
+    user: process.env.SQL_USER,
+    database: process.env.SQL_DATABASE,
+    password: process.env.SQL_PASSWORD,
+}
+
+if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
+  config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
+}
+
+let connection = mysql.createConnection(config);
+
+
+
+
+// // create a connection variable with the required details
+// var con = mysql.createConnection({
+//   //host: "instance1.c02gbtm2eqhm.us-east-1.rds.amazonaws.com", // ip address of server running mysql
+//   host:process.env.DB_HOST,
+//   user:process.env.DB_USER, // user name to your mysql database
+//   password:process.env.DB_PASS, // corresponding password
+//   database: process.env.DB_DATABASE // use the specified database
+// });
  
 // make to connection to the database.
 con.connect(function(err) {

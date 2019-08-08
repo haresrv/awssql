@@ -1,14 +1,27 @@
 import React,{Component} from 'react';
-import DatePicker  from 'react-datepicker';
-import {addDays} from 'date-fns';
+//import DatePicker  from 'react-datepicker';
+//import {addDays} from 'date-fns';
 import './App.css';
 import Particles from 'react-particles-js';
 import tachyons from 'tachyons';
 import Select from 'react-select';
-import 'react-datepicker/dist/react-datepicker.css';
+//import 'react-datepicker/dist/react-datepicker.css';
+//import {aws} from './accesskeys';
 // import moment from 'moment';
+import ReactS3 from 'react-s3';
+//import { uploadFile } from 'react-s3';
+import S3FileUpload from 'react-s3';
 
 const def_state = {'states': {'value':'','label':'','link':''}}
+
+const config={
+  bucketName:'cloud337',
+  albumName:'photos',
+  region:'us-east-1',
+  accessKeyId:'ASIAX62GXFY32MM5ZROB',
+  secretAccessKey:'BATKSn7FE8tD8NaP+jtDfrihwncn8Yr/HchV24mn'
+
+}
 
 
 // const validateForm = (states) => {
@@ -32,7 +45,8 @@ constructor(props)
     days:'',
     country: {'value':'','label':''},
     states: {'value':'','label':'','link':''},
-    response:{error:{}}
+    response:{error:{}},
+    filename:''
   }
 
 }
@@ -57,8 +71,23 @@ handleChange = (event) => {
   event.preventDefault();
   const {name,value} = event.target;
   this.setState({[name]:value});
-
+//console.log(name+" "+value);
 //console.log(this.state);
+
+
+	  var today = new Date();
+    var date3 = (today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear();
+
+    var date1 = new Date(date3); 
+    var date2 = new Date(value);
+   
+const diffTime = (date2.getTime() - date1.getTime());
+const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+console.log(diffDays-1); 
+ document.getElementById('days').value=diffDays-1;
+  this.setState({days:diffDays-1})
+console.log(this.state);
+
 }
   
 onChange =  (seldate) => {
@@ -66,13 +95,18 @@ onChange =  (seldate) => {
   this.setState({ seldate })
  // var dayselect=moment(seldate).format('DD-MM-YYYY');
  // var today=moment(new Date()).format('DD-MM-YYYY');
-
+console.log(seldate);
   var one_day=1000*60*60*24;
   var x=seldate-new Date();
   x=Math.round(x/one_day);
 
  document.getElementById('days').value=x;
   this.setState({days:x})
+}
+
+printstate=(e)=>
+{
+  console.log(this.state);
 }
 
 
@@ -87,18 +121,37 @@ body:JSON.stringify({
   seldate:this.state.seldate,
   days:this.state.days,
   country:this.state.country.label,
-  states:this.state.states.label
+  states:this.state.states.label,
+  filename:this.state.filename
 })
 }).then(res=> res.json())
 .then(data=>{this.setState({response:JSON.parse(data)})})
 .then(x=>{
- if(JSON.stringify(this.state.response.error)==null)
+ if(JSON.stringify(this.state.response.error)==='null')
   alert('DONE');
 else
   alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
 
 })}
 
+
+upload=(e)=>{
+  console.log(e.target.files[0].name);
+  this.setState({filename:e.target.files[0].name});
+
+  // ReactS3.upload(e.target.files[0],config)
+  //   .then( (data) =>{
+
+  //     alert(data.location);
+  //   })
+  //   .catch((err)=>{alert(err);})
+
+S3FileUpload
+    .uploadFile(e.target.files[0], config)
+    .then(data => console.log(data))
+    .catch(err => console.error(err))
+
+}
 
 
 
@@ -186,7 +239,6 @@ render(){
       }
   }} />
 </div>
-<div className="all">
 <div className="tc card border-success mb-3" >
   <div className="card-header">&lt;&lt; CLOUD CSE337 &gt;&gt;</div>
   <div className="card-body text-success">
@@ -201,8 +253,9 @@ render(){
 <div className='wrap'>
   <div className="form-group col-md-10">
     <label htmlFor="seldate">Date</label>
+<input type='date' className="seldate" id="seldate" onChange={this.handleChange} name="seldate"/>
 
-
+{/*
  <DatePicker
   className="seldate"
   selected={this.state.seldate}
@@ -210,7 +263,7 @@ render(){
   onChange={this.onChange}
   maxDate={addDays(new Date(), 30)}
    />
-  
+ */} 
   </div>
   <div className="form-group col-md-10">
     <label htmlFor="Days">Days</label>
@@ -245,8 +298,11 @@ render(){
 
     </div>
 
+<input type='file' onChange={this.upload}/>
+
+
   <div className="form-group col-md-10">
-      <label htmlFor="State" >Check State Variables</label>
+      <label htmlFor="State" onClick={this.printstate}>Check State Variables</label>
 
     </div>
 
@@ -256,7 +312,6 @@ render(){
 
 </form>
 </div>
-   </div>
    </div>
   );
 

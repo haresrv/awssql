@@ -8,20 +8,11 @@ import Select from 'react-select';
 //import 'react-datepicker/dist/react-datepicker.css';
 //import {aws} from './accesskeys';
 // import moment from 'moment';
-import ReactS3 from 'react-s3';
+//import ReactS3 from 'react-s3';
 //import { uploadFile } from 'react-s3';
-import S3FileUpload from 'react-s3';
-
+//import S3FileUpload from 'react-s3';
+import axios from 'axios';
 const def_state = {'states': {'value':'','label':'','link':''}}
-
-const config={
-  bucketName:'cloud337',
-  albumName:'photos',
-  region:'us-east-1',
-  accessKeyId:'ASIAX62GXFY32MM5ZROB',
-  secretAccessKey:'BATKSn7FE8tD8NaP+jtDfrihwncn8Yr/HchV24mn'
-
-}
 
 
 // const validateForm = (states) => {
@@ -35,286 +26,337 @@ const config={
 
 
 class App extends Component {
-
-
-constructor(props)
+render()
 {
-  super(props);
-  this.state={
-    seldate:new Date(),
-    days:'',
-    country: {'value':'','label':''},
-    states: {'value':'','label':'','link':''},
-    response:{error:{}},
-    filename:''
-  }
-
+  return(
+      <p>Hello</p>
+    );
+}
 }
 
-  handleChange1 = (selectedOption) => {
-    this.setState(def_state);
-    this.setState({country:selectedOption},() => {
+// constructor(props)
+// {
+//   super(props);
+//   this.state={
+//     seldate:new Date(),
+//     days:'',
+//     country: {'value':'','label':''},
+//     states: {'value':'','label':'','link':''},
+//     response:{error:{}},
+//     filename:''
+//   }
+
+// }
+
+//   handleChange1 = (selectedOption) => {
+//     this.setState(def_state);
+//     this.setState({country:selectedOption},() => {
     
-  //  console.log(this.state);
-    document.getElementById('countrydisplay').value=this.state.country.label;
-    document.getElementById('statedisplay').value=this.state.states.label;
+//   //  console.log(this.state);
+//     document.getElementById('countrydisplay').value=this.state.country.label;
+//     document.getElementById('statedisplay').value=this.state.states.label;
 
-})  };
+// })  };
 
-  handleChange2 = (selectedOption) => {
-    this.setState({states: selectedOption},() => {
-    document.getElementById('statedisplay').value=this.state.states.label; 
-}) }
-
-
-handleChange = (event) => {
-  event.preventDefault();
-  const {name,value} = event.target;
-  this.setState({[name]:value});
-//console.log(name+" "+value);
-//console.log(this.state);
+//   handleChange2 = (selectedOption) => {
+//     this.setState({states: selectedOption},() => {
+//     document.getElementById('statedisplay').value=this.state.states.label; 
+// }) }
 
 
-	  var today = new Date();
-    var date3 = (today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear();
+// handleChange = (event) => {
+//   event.preventDefault();
+//   const {name,value} = event.target;
+//   this.setState({[name]:value});
+// //console.log(name+" "+value);
+// //console.log(this.state);
 
-    var date1 = new Date(date3); 
-    var date2 = new Date(value);
+
+// 	  var today = new Date();
+//     var date3 = (today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear();
+
+//     var date1 = new Date(date3); 
+//     var date2 = new Date(value);
    
-const diffTime = (date2.getTime() - date1.getTime());
-const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-console.log(diffDays-1); 
- document.getElementById('days').value=diffDays-1;
-  this.setState({days:diffDays-1})
-console.log(this.state);
+// const diffTime = (date2.getTime() - date1.getTime());
+// const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+// console.log(diffDays-1); 
+//  document.getElementById('days').value=diffDays-1;
+//   this.setState({days:diffDays-1})
+// console.log(this.state);
 
-}
+// }
   
-onChange =  (seldate) => {
+// onChange =  (seldate) => {
    
-  this.setState({ seldate })
- // var dayselect=moment(seldate).format('DD-MM-YYYY');
- // var today=moment(new Date()).format('DD-MM-YYYY');
-console.log(seldate);
-  var one_day=1000*60*60*24;
-  var x=seldate-new Date();
-  x=Math.round(x/one_day);
+//   this.setState({ seldate })
+//  // var dayselect=moment(seldate).format('DD-MM-YYYY');
+//  // var today=moment(new Date()).format('DD-MM-YYYY');
+// console.log(seldate);
+//   var one_day=1000*60*60*24;
+//   var x=seldate-new Date();
+//   x=Math.round(x/one_day);
 
- document.getElementById('days').value=x;
-  this.setState({days:x})
-}
+//  document.getElementById('days').value=x;
+//   this.setState({days:x})
+// }
 
-printstate=(e)=>
-{
-  console.log(this.state);
-}
+// printstate=(e)=>
+// {
+//   console.log(this.state);
+// }
 
+// handleUpload = (event) => {
+//   event.preventDefault();
+//   const data = new FormData();
+// data.append( 'profileImage', this.state.filename, this.state.filename.name );
 
-handleSubmit = (event) => {
-
-event.preventDefault();
-
-fetch('http://localhost:3001/',{
-method:'post',
-headers:{'Content-Type':'application/json'},
-body:JSON.stringify({
-  seldate:this.state.seldate,
-  days:this.state.days,
-  country:this.state.country.label,
-  states:this.state.states.label,
-  filename:this.state.filename
-})
-}).then(res=> res.json())
-.then(data=>{this.setState({response:JSON.parse(data)})})
-.then(x=>{
- if(JSON.stringify(this.state.response.error)==='null')
-  alert('DONE');
-else
-  alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
-
-})}
-
-
-upload=(e)=>{
-  console.log(e.target.files[0].name);
-  this.setState({filename:e.target.files[0].name});
-
-  // ReactS3.upload(e.target.files[0],config)
-  //   .then( (data) =>{
-
-  //     alert(data.location);
-  //   })
-  //   .catch((err)=>{alert(err);})
-
-S3FileUpload
-    .uploadFile(e.target.files[0], config)
-    .then(data => console.log(data))
-    .catch(err => console.error(err))
-
-}
-
-
-
-render(){
+// axios.post( 'http://localhost:3001/', data, {
+//     headers: {
+//      'accept': 'application/json',
+//      'Accept-Language': 'en-US,en;q=0.8',
+//      'Content-Type': 'multipart/form-data; boundary=${data._boundary}',
+//     }
+//    })
+//     .then( ( response ) => {
+// if ( 200 === response.status ) {
+//       // If file size is larger than expected.
+//       if( response.data.error ) {
+//        if ( 'LIMIT_FILE_SIZE' === response.data.error.code ) {
+//        console.log( 'Max size: 2MB');
+//        } else {
+//         console.log( response.data );
+// // If not the given file type
+//         console.log( response.data.error+ 'red' );
+//        }
+//       } 
+//       else {
+//        // Success
+//        let fileName = response.data;
+//        console.log( 'fileName', fileName );
+//        console.log( 'File Uploaded'+ '#3089cf' );
+//       }
+//      }
+//   else {
+//    // if file not selected throw error
+//  console.log( 'Please upload file'+ 'red' );
+//   }
   
-    const options1 = [
-      {value: 'in', label: 'India'},
-      {value: 'aus', label: 'Australia'},
-      {value: 'sa', label: 'South Africa'},
-      {value: 'ban', label: 'Bangladesh'},
-      {value: 'eng', label: 'England'},
 
-    ];
+//     }).catch( ( error ) => {
+//     // If another error
+//      console.log( error+ 'red' );
+//    });
+//   } 
+  
 
-    const options2 = [
-      {value: 'tn', label: 'Tamilnadu', link: 'in'},
-      {value: 'wb', label: 'West Bengal', link: 'in'},
-      {value: 'kl', label: 'Kerala', link: 'in'},
-      {value: 'jk', label: 'Jammu & Kashmir', link: 'in'},
-      {value: 'jh', label: 'Jharkhand', link: 'in'},
-      {value: 'mel', label: 'Melbourne', link: 'aus'},
-      {value: 'syd', label: 'Sydney', link: 'aus'},
-      {value: 'br', label: 'Brisbane', link: 'aus'},
-      {value: 'ho', label: 'Hobart', link: 'aus'},
-      {value: 'ad', label: 'Adelaide', link: 'aus'},
-      {value: 'ct', label: 'Capetown', link: 'sa'},
-      {value: 'db', label: 'Durban', link: 'sa'},
-      {value: 'pe', label: 'Port Elizabeth', link: 'sa'},
-      {value: 'bf', label: 'Bloemfontein', link: 'sa'},
-      {value: 'jb', label: 'Johannesburg', link: 'sa'},
-      {value: 'cg', label: 'Chittagong', link: 'ban'},
-      {value: 'dk', label: 'Dhaka', link: 'ban'},
-      {value: 'bs', label: 'Barisal', link: 'ban'},
-      {value: 'rs', label: 'Rajshahi', link: 'ban'}, 
-      {value: 'lan', label: 'Lancashire', link: 'ban'},
-      {value: 'wor', label: 'Worcestershire', link: 'eng'},
-      {value: 'notts', label: 'Nottingham', link: 'eng'},
-      {value: 'war', label: 'Warwickshire', link: 'eng'},
-      {value: 'deb', label: 'Derbyshire', link: 'eng'},
-      {value: 'co', label: 'Comilla', link: 'ban'}
+
+
+// handleSubmit = (event) => {
+
+// event.preventDefault();
+
+// fetch('http://localhost:3001/',{
+// method:'post',
+// headers:{'Content-Type':'application/json'},
+// body:JSON.stringify({
+//   seldate:this.state.seldate,
+//   days:this.state.days,
+//   country:this.state.country.label,
+//   states:this.state.states.label,
+//   filename:this.state.filename
+// })
+// }).then(res=> res.json())
+// .then(data=>{this.setState({response:JSON.parse(data)})})
+// .then(x=>{
+//  if(JSON.stringify(this.state.response.error)==='null')
+//   alert('DONE');
+// else
+//   alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
+
+// })}
+
+
+// upload=(e)=>{
+//   console.log(e.target.files[0]);
+//   this.setState({filename:e.target.files[0]});
+
+//   // ReactS3.upload(e.target.files[0],config)
+//   //   .then( (data) =>{
+
+//   //     alert(data.location);
+//   //   })
+//   //   .catch((err)=>{alert(err);})
+
+// // S3FileUpload
+// //     .uploadFile(e.target.files[0], config)
+// //     .then(data => console.log(data))
+// //     .catch(err => console.error(err))
+
+// }
+
+
+
+// render(){
+  
+//     const options1 = [
+//       {value: 'in', label: 'India'},
+//       {value: 'aus', label: 'Australia'},
+//       {value: 'sa', label: 'South Africa'},
+//       {value: 'ban', label: 'Bangladesh'},
+//       {value: 'eng', label: 'England'},
+
+//     ];
+
+//     const options2 = [
+//       {value: 'tn', label: 'Tamilnadu', link: 'in'},
+//       {value: 'wb', label: 'West Bengal', link: 'in'},
+//       {value: 'kl', label: 'Kerala', link: 'in'},
+//       {value: 'jk', label: 'Jammu & Kashmir', link: 'in'},
+//       {value: 'jh', label: 'Jharkhand', link: 'in'},
+//       {value: 'mel', label: 'Melbourne', link: 'aus'},
+//       {value: 'syd', label: 'Sydney', link: 'aus'},
+//       {value: 'br', label: 'Brisbane', link: 'aus'},
+//       {value: 'ho', label: 'Hobart', link: 'aus'},
+//       {value: 'ad', label: 'Adelaide', link: 'aus'},
+//       {value: 'ct', label: 'Capetown', link: 'sa'},
+//       {value: 'db', label: 'Durban', link: 'sa'},
+//       {value: 'pe', label: 'Port Elizabeth', link: 'sa'},
+//       {value: 'bf', label: 'Bloemfontein', link: 'sa'},
+//       {value: 'jb', label: 'Johannesburg', link: 'sa'},
+//       {value: 'cg', label: 'Chittagong', link: 'ban'},
+//       {value: 'dk', label: 'Dhaka', link: 'ban'},
+//       {value: 'bs', label: 'Barisal', link: 'ban'},
+//       {value: 'rs', label: 'Rajshahi', link: 'ban'}, 
+//       {value: 'lan', label: 'Lancashire', link: 'ban'},
+//       {value: 'wor', label: 'Worcestershire', link: 'eng'},
+//       {value: 'notts', label: 'Nottingham', link: 'eng'},
+//       {value: 'war', label: 'Warwickshire', link: 'eng'},
+//       {value: 'deb', label: 'Derbyshire', link: 'eng'},
+//       {value: 'co', label: 'Comilla', link: 'ban'}
         
     
 
 
-    ];
+//     ];
 
-    const filteredOptions = options2.filter((o) => (o.link=== this.state.country.value))
+//     const filteredOptions = options2.filter((o) => (o.link=== this.state.country.value))
  
-  return (
-    <div className="App">
-      <div>
-     <Particles className="particles"
-    params={{
-      "particles": {
-          "number": {
-              "value": 160,
-              "density": {
-                  "enable": false
-              }
-          },
-          "size": {
-              "value": 10,
-              "random": true
-          },
-          "move": {
-              "direction": "bottom",
-              "out_mode": "out"
-          },
-          "line_linked": {
-              "enable": false
-          }
-      },
-      "interactivity": {
-          "events": {
-              "onclick": {
-                  "enable": true,
-                  "mode": "remove"
-              }
-          },
-          "modes": {
-              "remove": {
-                  "particles_nb": 10
-              }
-          }
-      }
-  }} />
-</div>
-<div className="tc card border-success mb-3" >
-  <div className="card-header">&lt;&lt; CLOUD CSE337 &gt;&gt;</div>
-  <div className="card-body text-success">
-    <h5 className="card-title">REACT+NODE+RDS</h5>
+//   return (
+//     <div className="App">
+//       <div>
+//      <Particles className="particles"
+//     params={{
+//       "particles": {
+//           "number": {
+//               "value": 160,
+//               "density": {
+//                   "enable": false
+//               }
+//           },
+//           "size": {
+//               "value": 10,
+//               "random": true
+//           },
+//           "move": {
+//               "direction": "bottom",
+//               "out_mode": "out"
+//           },
+//           "line_linked": {
+//               "enable": false
+//           }
+//       },
+//       "interactivity": {
+//           "events": {
+//               "onclick": {
+//                   "enable": true,
+//                   "mode": "remove"
+//               }
+//           },
+//           "modes": {
+//               "remove": {
+//                   "particles_nb": 10
+//               }
+//           }
+//       }
+//   }} />
+// </div>
+// <div className="tc card border-success mb-3" >
+//   <div className="card-header">&lt;&lt; CLOUD CSE337 &gt;&gt;</div>
+//   <div className="card-body text-success">
+//     <h5 className="card-title">REACT+NODE+RDS</h5>
     
-  </div>
-</div>
+//   </div>
+// </div>
 
 
-<div className='formwarp'>
-<form>
-<div className='wrap'>
-  <div className="form-group col-md-10">
-    <label htmlFor="seldate">Date</label>
-<input type='date' className="seldate" id="seldate" onChange={this.handleChange} name="seldate"/>
+// <div className='formwarp'>
+// <form>
+// <div className='wrap'>
+//   <div className="form-group col-md-10">
+//     <label htmlFor="seldate">Date</label>
+// <input type='date' className="seldate" id="seldate" onChange={this.handleChange} name="seldate"/>
 
-{/*
- <DatePicker
-  className="seldate"
-  selected={this.state.seldate}
-  minDate={new Date()}
-  onChange={this.onChange}
-  maxDate={addDays(new Date(), 30)}
-   />
- */} 
-  </div>
-  <div className="form-group col-md-10">
-    <label htmlFor="Days">Days</label>
-    <input type="text" className="form-control" id="days" name="days" readOnly />
-  </div>
-  <div className="form-group col-md-10">
-      <label htmlFor="Country">Country</label>
-        <Select
-          name="country"
-          dateFormat="yyyy/MM/dd"
-          value={this.state.country.value}
-          onChange={this.handleChange1}
-          options={options1}
-        />
-         <input type="text" className="form-control" id="countrydisplay" disabled />
+// {/*
+//  <DatePicker
+//   className="seldate"
+//   selected={this.state.seldate}
+//   minDate={new Date()}
+//   onChange={this.onChange}
+//   maxDate={addDays(new Date(), 30)}
+//    />
+//  */} 
+//   </div>
+//   <div className="form-group col-md-10">
+//     <label htmlFor="Days">Days</label>
+//     <input type="text" className="form-control" id="days" name="days" readOnly />
+//   </div>
+//   <div className="form-group col-md-10">
+//       <label htmlFor="Country">Country</label>
+//         <Select
+//           name="country"
+//           dateFormat="yyyy/MM/dd"
+//           value={this.state.country.value}
+//           onChange={this.handleChange1}
+//           options={options1}
+//         />
+//          <input type="text" className="form-control" id="countrydisplay" disabled />
          
 
 
-    </div>
+//     </div>
 
-  <div className="form-group col-md-10">
-      <label htmlFor="State">State</label>
-
-
-        <Select
-          name="states"
-          value={this.state.states.value}
-          onChange={this.handleChange2}
-          options={filteredOptions}
-        required/>
-<input type="text" className="form-control" id="statedisplay" disabled />
-
-    </div>
-
-<input type='file' onChange={this.upload}/>
+//   <div className="form-group col-md-10">
+//       <label htmlFor="State">State</label>
 
 
-  <div className="form-group col-md-10">
-      <label htmlFor="State" onClick={this.printstate}>Check State Variables</label>
+//         <Select
+//           name="states"
+//           value={this.state.states.value}
+//           onChange={this.handleChange2}
+//           options={filteredOptions}
+//         required/>
+// <input type="text" className="form-control" id="statedisplay" disabled />
 
-    </div>
+//     </div>
+
+// <input type='file' onChange={this.upload}/>
 
 
-  <input type='submit' onClick={this.handleSubmit} className="btn btn-primary"/>
-</div>
+//   <div className="form-group col-md-10">
+//       <label htmlFor="State" onClick={this.printstate}>Check State Variables</label>
 
-</form>
-</div>
-   </div>
-  );
+//     </div>
 
-}}
+
+//   <input type='submit' onClick={this.handleUpload} className="btn btn-primary"/>
+// </div>
+
+// </form>
+// </div>
+//    </div>
+//   );
+
+// }}
 
 export default App;

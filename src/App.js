@@ -104,7 +104,7 @@
     if(this.state.filename!='')
   data.append( 'profileImage', this.state.filename, this.state.filename.name );
   console.log("UPLOADING IMAGE");
-  axios.post( 'http://localhost:3001/img', data, {
+  axios.post( 'http://34.201.120.204:3001/img', data, {
       headers: {
        'accept': 'application/json',
        'Accept-Language': 'en-US,en;q=0.8',
@@ -153,7 +153,7 @@
   event.preventDefault();
 
 
-  fetch('http://localhost:3001/',{
+  fetch('http://34.201.120.204:3001/',{
   method:'post',
   headers:{'Content-Type':'application/json'},
   body:JSON.stringify({

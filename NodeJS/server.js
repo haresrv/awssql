@@ -17,9 +17,9 @@ app.use(cors());
 var mysql = require('mysql');
  
 const s3 = new aws.S3({
- accessKeyId: 'ASIAX62GXFY3YKV4OX5M',
- secretAccessKey: 'ca/ng6wsibLxDpj466UOO8FAvp4Jipmm7c1nDepT',
- sessionToken:'FQoGZXIvYXdzEBMaDLSrcBBrypv3aO7l6yKSA1jJY9xvR1wLA+MbaO85CJbgfsj0WMyKbJLwuA9urYzRlCdNxzvchj8bXo431qpYkMFWkqlw+p3qA4yPc957y7VeoN25iO/DZNXCc4I5yiXIkpANuWHgfoQ80Q7xDZOm1EykGHsLDqt4Fd6GV4pxg7iKf50AJUNJivrYtKBw0jyOGF8iwXFKy6AFJLfbNhd36cagSVrmQJ5oIgOz/7KPOwjHRwcvqjmJi7YJiXDGJNWQf2TY/gPl0CRCzpCz/Q7LX5Uw8AzJ3L8W9kYTqEC+/k8o4fippViwB8Kl2Vc+a5VwBPMWnb1bjLASPpruC7A3ThaTHEum0bpNB8ditusvB5kQ1BbHsDc4lw1HU4+IC8GtbT4AKFkkADuHyZcKAL/qVPGNYicJTf5PY6ONdhrvcQKRjl5anK/pNl2x4N37Wi+bq6dd8FW4+JsCFPHpnyRMGNfhTK9aLdV1JqnkCxZRp8Y8q1/JdwK+7p6YbSmL6S5ZCX+lHTaCMrAeOuNCyx940M578wjuHtKMb25A5R5LQRtqzyiJgLXqBQ==',
+ accessKeyId: 'ASIAX62GXFY3TJUGWBQB',
+ secretAccessKey: 'ogTBg2o3h9Ka2VtVSfxXX31YMdqibOuxEZcgcZUT',
+ sessionToken:'FQoGZXIvYXdzEKv//////////wEaDJqUNL3QziF6t5YqHSKWAsWrQKrhFjhfI1o5Q/4o/PRBqo18eW65Q3dXOB2uw9FGT1GOBNCuKTQFV57zcVATyHQ5kwArFrTMEmTOPDPDsHaoCYMu8hqNpUT5qxu7Dor9hsT3bNQlodewgZf3pIpJ/PmvJUihgNlgvwnikjjrFkxwgKL+ilJQHgc3bO5/KJvaAz49EWNjteFxBDMBHOItsb+NpdH0GCXIZXQ3U9jMUHLp+OLnAQFj6rRryRvI2+jsA7z87QRYwRtHBd00PASfFWT93yIubnL5wmwDQwPBG/4Cx6xXv2DVddRtvJIeVz/LkrewPbIGPfQzOSk8DsGitVnp5h6rZRhGY8WhH0/aRnsipEMjoiJ4iEoVjB8vf2AYuLAC4xjgKKTKjusF',
  Bucket: 'cloud337'
 });
 
@@ -114,7 +114,7 @@ app.post('/',(req,res)=>{
 
 
 var con = mysql.createConnection({
-  host: "instance1.c02gbtm2eqhm.us-east-1.rds.amazonaws.com", // ip address of server running mysql
+  host: "rand.c02gbtm2eqhm.us-east-1.rds.amazonaws.com", // ip address of server running mysql
   //host:"34.67.178.8",
   user:"master", // user name to your mysql database
   password:"password", // corresponding password
